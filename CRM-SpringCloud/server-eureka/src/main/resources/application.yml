@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: server-eureka
+
+
+server:
+  port: 8000
+
+
+
+eureka:
+  client:
+    #单机eureka不注册
+    register-with-eureka: false
+    #不从其他服务中心获取服务列表
+    fetch-registry: false
+    service-url:
+      defaultZone: http://127.0.0.1:8000/eureka
+  #  不知道为什么, 我的eureka页面最下面会显示192.168.23.1, 加上这个就好了
+  instance:
+    ip-address: 192.168.10.106

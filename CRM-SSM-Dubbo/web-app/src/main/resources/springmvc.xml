@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
+    <!-- 0.加载自己的properties-->
+    <context:property-placeholder location="classpath:myConfig.properties"/>
+
+    <!-- 1.开启mvc的各种资源及注解-->
+    <mvc:annotation-driven/>
+
+    <!-- 2.把控制器放进容器-->
+    <context:component-scan base-package="cn.txy.controller"/>
+
+    <!-- 3.配置视图解析器,方便简化jsp路径-->
+    <bean id="jspViewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--  4.静态资源走default-servlet-->
+    <mvc:default-servlet-handler/>
+
+    <!-- 5.添加登录拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="cn.txy.intercept.LoginStatusIntercept"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 日志记录器 -->
+    <bean id="logger" class="org.apache.logging.log4j.LogManager" factory-method="getLogger"/>
+
+    <!-- 引入dubbo配置-->
+    <import resource="classpath:dubbo-webApp.xml"/>
+</beans>

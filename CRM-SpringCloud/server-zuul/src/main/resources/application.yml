@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: server-zuul
+
+
+server:
+  port: 7999
+
+#  路由规则
+zuul:
+  routes:
+    web:
+      path: /webapp/**
+      serviceId: webapp
+    customer:
+      path: /customer/**
+      serviceId: customer-service
+    dict:
+      path: /dict/**
+      serviceId: dict-service
+    user:
+      path: /user/**
+      serviceId: user-service
+
+#eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8000/eureka

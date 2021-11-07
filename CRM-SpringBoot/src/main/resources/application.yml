@@ -1,0 +1,14 @@
+spring:
+  redis:
+    host: 192.168.10.199
+    port: 8001
+    database: 14
+  mvc:
+    view:
+      prefix: /pages/
+      suffix: .jsp
+
+logging:
+  level:
+    cn.txy: info
+

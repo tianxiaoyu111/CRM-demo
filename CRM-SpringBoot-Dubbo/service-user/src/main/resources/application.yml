@@ -1,0 +1,15 @@
+dubbo:
+  application:
+    name: serviceUser
+
+  registry:
+    protocol: zookeeper
+    address: 192.168.10.199:2181
+
+  protocol:
+    name: dubbo
+    port: 20881
+
+logging:
+  level:
+    cn.txy: info

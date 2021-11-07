@@ -1,0 +1,22 @@
+dubbo:
+  application:
+    name: web-App
+
+  registry:
+    protocol: zookeeper
+    address: 192.168.10.199:2181
+
+
+spring:
+  mvc:
+    view:
+      prefix: /pages/
+      suffix: .jsp
+
+logging:
+  level:
+    cn.txy: info
+
+fromType: "002"
+industryType: "001"
+levelType: "006"

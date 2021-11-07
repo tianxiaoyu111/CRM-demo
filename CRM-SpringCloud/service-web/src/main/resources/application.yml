@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: webapp
+  # 设置编码信息
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+  mvc:
+      view:
+        prefix: /pages/
+        suffix: .jsp
+
+server:
+  port: 8004
+
+#eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8000/eureka
+
+
+logging:
+  level:
+    cn.txy: info
+
+
+fromType: "002"
+industryType: "001"
+levelType: "006"

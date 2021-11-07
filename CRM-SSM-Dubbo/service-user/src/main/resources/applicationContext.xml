@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- 一.开启注解-->
+    <context:annotation-config/>
+    <!-- 二.把service放进容器-->
+    <context:component-scan base-package="cn.txy.service"/>
+
+    <!-- 三.mybatis-->
+    <!-- 3.1 加载外部属性文件-->
+    <context:property-placeholder location="classpath:jdbc.properties" system-properties-mode="NEVER"/>
+    <!-- 3.2 配置数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${user}"/>
+        <property name="password" value="${password}"/>
+        <property name="maxTotal" value="10"/>
+        <property name="maxIdle" value="5"/>
+    </bean>
+    <!-- 3.3 配置mybatis的SqlSessionFactory，使用mybatis-spring整合包中的 SqlSessionFactoryBean-->
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 数据库连接池 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 添加分页插件-->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor"/>
+            </array>
+        </property>
+    </bean>
+    <!-- 3.4 mapper扫描器-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.txy.dao"/>
+    </bean>
+    <!-- mybatis END-->
+
+    <!-- 四.mybatis事务管理器-->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--  事务AOP配置-->
+    <aop:config>
+        <aop:pointcut id="transPointCut" expression="execution(* cn.txy.service.*.*(..))"/>
+        <aop:advisor advice-ref="transAdvice" pointcut-ref="transPointCut"/>
+    </aop:config>
+    <tx:advice id="transAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 传播行为 -->
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 日志记录器 -->
+    <bean id="logger" class="org.apache.logging.log4j.LogManager" factory-method="getLogger"/>
+
+    <!-- 引入duboo配置-->
+    <import resource="dubbo-serviceUser.xml"/>
+</beans>

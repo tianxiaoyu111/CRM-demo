@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+
+    <!--  dubbo应用程序的名称  -->
+    <dubbo:application name="dictProvider">
+            <!--    qos是dubbo提供的远程调试 默认监听22222端口 如果同一个机器运行多个dubbo会冲突     -->
+        <dubbo:parameter key="qos.enable" value="false"/>
+    </dubbo:application>
+
+    <!-- 使用注册中心   -->
+    <dubbo:registry protocol="zookeeper" address="192.168.10.199:2181"/>
+
+
+    <!--  服务的实现类  -->
+    <bean id="dictServiceImpl" class="cn.txy.service.impl.DictServiceImpl"/>
+
+
+
+    <!--  发布服务 dubbo发布服务以接口为单位 作为服务的提供方还需要提供接口实现-->
+    <dubbo:service interface="cn.txy.service.DictService" ref="dictServiceImpl" loadbalance="roundrobin"/>
+
+
+
+    <!--  服务发布成功后就会产生一个dubbo协议的服务地址  消费者在调用时就通过改地址来调用 -->
+
+    <!--  更改监听端口-->
+    <dubbo:protocol  port="20882"/>
+
+</beans>

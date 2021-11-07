@@ -1,0 +1,23 @@
+dubbo:
+  application:
+    name: serviceDict
+
+  registry:
+    protocol: zookeeper
+    address: 192.168.10.199:2181
+
+  protocol:
+    name: dubbo
+    port: 20882
+
+spring:
+  redis:
+    host: 192.168.10.199
+    port: 8001
+    database: 14
+
+logging:
+  level:
+    cn.txy: info
+
+enableRedis: true

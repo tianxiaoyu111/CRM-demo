@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: customer-service
+  # 设置编码信息
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+
+server:
+  port: 8001
+
+#eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8000/eureka
+
+
